@@ -1,0 +1,158 @@
+body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 24px;
+}
+
+.dashboard h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.weekday-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  max-width: 900px;
+  margin-bottom: 6px;
+}
+
+.weekday-label {
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  max-width: 900px;
+}
+
+.day-cell {
+  background-color: #1e293b;
+  border-radius: 6px;
+  padding: 12px;
+  min-height: 90px;
+  font-size: 14px;
+  border: 1px solid #334155;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.day-cell:hover {
+  border-color: #64748b;
+}
+
+.day-cell.selected {
+  border-color: #38bdf8;
+  border-width: 2px;
+}
+
+.day-cell.empty {
+  background-color: transparent;
+  border: none;
+  cursor: default;
+}
+
+.day-number {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.event-tag {
+  font-size: 11px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  color: white;
+  margin-top: 4px;
+}
+
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  transition: background 0.2s ease;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.panel-overlay.open {
+  background: rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+}
+
+.panel {
+  width: 380px;
+  height: 100%;
+  background-color: #1e293b;
+  padding: 24px;
+  box-sizing: border-box;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+}
+
+.panel-overlay.open .panel {
+  transform: translateX(0);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.panel-header h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.panel-close {
+  background: none;
+  border: none;
+  color: #f1f5f9;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.panel-empty {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.task-card {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.task-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.task-description {
+  font-size: 13px;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+}
+
+.task-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #94a3b8;
+}
