@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query'
-import { fetchCalendarEvents, fetchChecklist } from '../api'
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { fetchCalendarEvents, fetchChecklist, updateTaskStatus, type ChecklistTask } from '../api'
 
 type ChecklistPanelProps = {
   selectedDay: number | null
@@ -8,6 +8,7 @@ type ChecklistPanelProps = {
 
 function ChecklistPanel({ selectedDay, onClose }: ChecklistPanelProps) {
   const isOpen = selectedDay !== null
+  const queryClient = useQueryClient()
 
   const { data: events } = useQuery({
     queryKey: ['calendar-events'],
@@ -25,8 +26,23 @@ function ChecklistPanel({ selectedDay, onClose }: ChecklistPanelProps) {
   const { data: tasks, isLoading } = useQuery({
     queryKey: ['checklist', subsystemId],
     queryFn: () => fetchChecklist(subsystemId!),
-    enabled: !!subsystemId, // only fetch once we actually have a subsystem
+    enabled: !!subsystemId,
   })
+
+  const mutation = useMutation({
+    mutationFn: ({ taskId, status }: { taskId: string; status: string }) =>
+      updateTaskStatus(taskId, status),
+    onSuccess: (updatedTask) => {
+      queryClient.setQueryData<ChecklistTask[]>(['checklist', subsystemId], (old) =>
+        old?.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t))
+      )
+    },
+  })
+
+  function toggleComplete(task: ChecklistTask) {
+    const newStatus = task.completion_status === 'COMPLETE' ? 'PENDING' : 'COMPLETE'
+    mutation.mutate({ taskId: task.task_id, status: newStatus })
+  }
 
   return (
     <div className={`panel-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}>
@@ -43,8 +59,18 @@ function ChecklistPanel({ selectedDay, onClose }: ChecklistPanelProps) {
         )}
 
         {tasks?.map((task) => (
-          <div key={task.task_id} className="task-card">
-            <div className="task-title">{task.task_title}</div>
+          <div
+            key={task.task_id}
+            className={`task-card ${task.completion_status === 'COMPLETE' ? 'task-complete' : ''}`}
+          >
+            <div className="task-card-header">
+              <input
+                type="checkbox"
+                checked={task.completion_status === 'COMPLETE'}
+                onChange={() => toggleComplete(task)}
+              />
+              <div className="task-title">{task.task_title}</div>
+            </div>
             <div className="task-description">{task.task_description}</div>
             <div className="task-meta">
               <span>{task.approx_time_min} min</span>

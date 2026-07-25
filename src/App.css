@@ -282,3 +282,23 @@ body {
   color: #94a3b8;
   font-size: 11px;
 }
+.task-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.task-card-header input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.task-complete {
+  opacity: 0.6;
+}
+
+.task-complete .task-title {
+  text-decoration: line-through;
+}

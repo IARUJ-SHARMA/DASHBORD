@@ -23,6 +23,7 @@ export type ChecklistTask = {
   video_ref_filename: string | null
   image_ref_filename: string | null
   mandatory_flag: string | null
+  completion_status?: string | null
 }
 
 export async function fetchCalendarEvents(): Promise<CalendarEvent[]> {
@@ -36,6 +37,7 @@ export async function fetchChecklist(subsystemId: string): Promise<ChecklistTask
   if (!res.ok) throw new Error('Failed to fetch checklist')
   return res.json()
 }
+
 export type Summary = {
   planned_checks_today: number
   estimated_maintenance_hours: number
@@ -48,6 +50,7 @@ export async function fetchSummary(dateStr: string): Promise<Summary> {
   if (!res.ok) throw new Error('Failed to fetch summary')
   return res.json()
 }
+
 export type Consumable = {
   item_id: string
   consumable_item_name: string
@@ -64,6 +67,7 @@ export async function fetchConsumables(): Promise<Consumable[]> {
   if (!res.ok) throw new Error('Failed to fetch consumables')
   return res.json()
 }
+
 export type Spare = {
   spare_id: string
   spare_item_name: string
@@ -77,5 +81,15 @@ export type Spare = {
 export async function fetchSpares(): Promise<Spare[]> {
   const res = await fetch(`${BASE_URL}/api/spares`)
   if (!res.ok) throw new Error('Failed to fetch spares')
+  return res.json()
+}
+
+export async function updateTaskStatus(taskId: string, status: string): Promise<ChecklistTask> {
+  const res = await fetch(`${BASE_URL}/api/checklist/${taskId}/status`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completion_status: status }),
+  })
+  if (!res.ok) throw new Error('Failed to update task status')
   return res.json()
 }
