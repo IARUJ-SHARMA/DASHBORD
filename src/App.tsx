@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Calendar from './components/Calendar'
 import ChecklistPanel from './components/ChecklistPanel'
 import StatCards from './components/StatCards'
+import InventoryPanel from './components/InventoryPanel'
 import './App.css'
 
 function App() {
@@ -11,7 +12,10 @@ function App() {
     <div className="dashboard">
       <h1>Radar Preventive Maintenance Dashboard</h1>
       <StatCards selectedDay={selectedDay} />
-      <Calendar selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+      <div className="main-layout">
+        <Calendar selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+        <InventoryPanel />
+      </div>
       <ChecklistPanel selectedDay={selectedDay} onClose={() => setSelectedDay(null)} />
     </div>
   )

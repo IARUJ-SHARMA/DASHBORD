@@ -48,3 +48,19 @@ export async function fetchSummary(dateStr: string): Promise<Summary> {
   if (!res.ok) throw new Error('Failed to fetch summary')
   return res.json()
 }
+export type Consumable = {
+  item_id: string
+  consumable_item_name: string
+  associated_subsystems: string | null
+  unit_of_measure: string | null
+  current_qty: number | null
+  alert_threshold: number | null
+  status: string
+  storage_location: string | null
+}
+
+export async function fetchConsumables(): Promise<Consumable[]> {
+  const res = await fetch(`${BASE_URL}/api/consumables`)
+  if (!res.ok) throw new Error('Failed to fetch consumables')
+  return res.json()
+}
