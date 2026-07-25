@@ -36,3 +36,15 @@ export async function fetchChecklist(subsystemId: string): Promise<ChecklistTask
   if (!res.ok) throw new Error('Failed to fetch checklist')
   return res.json()
 }
+export type Summary = {
+  planned_checks_today: number
+  estimated_maintenance_hours: number
+  subsystems_eligible: number
+  status_percentage: number
+}
+
+export async function fetchSummary(dateStr: string): Promise<Summary> {
+  const res = await fetch(`${BASE_URL}/api/summary/${dateStr}`)
+  if (!res.ok) throw new Error('Failed to fetch summary')
+  return res.json()
+}
