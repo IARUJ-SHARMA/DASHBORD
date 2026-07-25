@@ -64,3 +64,18 @@ export async function fetchConsumables(): Promise<Consumable[]> {
   if (!res.ok) throw new Error('Failed to fetch consumables')
   return res.json()
 }
+export type Spare = {
+  spare_id: string
+  spare_item_name: string
+  subsystem_id: string | null
+  months_remaining: number | null
+  status: string
+  alert_level: string | null
+  storage_location: string | null
+}
+
+export async function fetchSpares(): Promise<Spare[]> {
+  const res = await fetch(`${BASE_URL}/api/spares`)
+  if (!res.ok) throw new Error('Failed to fetch spares')
+  return res.json()
+}

@@ -255,3 +255,30 @@ body {
   color: #94a3b8;
   font-size: 13px;
 }
+.inventory-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.inventory-tabs button {
+  background-color: #0f172a;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.inventory-tabs button.tab-active {
+  background-color: #38bdf8;
+  color: #0f172a;
+  font-weight: bold;
+  border-color: #38bdf8;
+}
+
+.inventory-sub {
+  color: #94a3b8;
+  font-size: 11px;
+}
