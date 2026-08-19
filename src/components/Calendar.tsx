@@ -2,14 +2,20 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchCalendarEvents } from '../api'
 
 type CalendarProps = {
+  year: number
+  month: number
   selectedDay: number | null
   setSelectedDay: (day: number) => void
+  onPreviousMonth: () => void
+  onNextMonth: () => void
 }
 
-function Calendar({ selectedDay, setSelectedDay }: CalendarProps) {
-  const year = 2026
-  const month = 4 // May
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
 
+function Calendar({ year, month, selectedDay, setSelectedDay, onPreviousMonth, onNextMonth }: CalendarProps) {
   const { data: events, isLoading, error } = useQuery({
     queryKey: ['calendar-events'],
     queryFn: fetchCalendarEvents,
@@ -29,6 +35,12 @@ function Calendar({ selectedDay, setSelectedDay }: CalendarProps) {
 
   return (
     <div>
+      <div className="calendar-nav">
+        <button onClick={onPreviousMonth}>← Prev</button>
+        <span className="calendar-month-label">{MONTH_NAMES[month]} {year}</span>
+        <button onClick={onNextMonth}>Next →</button>
+      </div>
+
       <div className="weekday-header">
         {weekdayLabels.map((label) => (
           <div key={label} className="weekday-label">{label}</div>
@@ -38,7 +50,7 @@ function Calendar({ selectedDay, setSelectedDay }: CalendarProps) {
         {cells.map((day, index) => {
           const dayEvents = events?.filter((e) => {
             const eventDate = new Date(e.event_date)
-            return day !== null && eventDate.getDate() === day && eventDate.getMonth() === month
+            return day !== null && eventDate.getDate() === day && eventDate.getMonth() === month && eventDate.getFullYear() === year
           }) ?? []
 
           const isSelected = day === selectedDay

@@ -2,13 +2,12 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchSummary } from '../api'
 
 type StatCardsProps = {
+  year: number
+  month: number
   selectedDay: number | null
 }
 
-function StatCards({ selectedDay }: StatCardsProps) {
-  const year = 2026
-  const month = 4 // May
-
+function StatCards({ year, month, selectedDay }: StatCardsProps) {
   const dateStr = selectedDay
     ? `${year}-${String(month + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`
     : null

@@ -2,11 +2,13 @@ import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { fetchCalendarEvents, fetchChecklist, updateTaskStatus, type ChecklistTask } from '../api'
 
 type ChecklistPanelProps = {
+  year: number
+  month: number
   selectedDay: number | null
   onClose: () => void
 }
 
-function ChecklistPanel({ selectedDay, onClose }: ChecklistPanelProps) {
+function ChecklistPanel({ year, month, selectedDay, onClose }: ChecklistPanelProps) {
   const isOpen = selectedDay !== null
   const queryClient = useQueryClient()
 
@@ -15,10 +17,9 @@ function ChecklistPanel({ selectedDay, onClose }: ChecklistPanelProps) {
     queryFn: fetchCalendarEvents,
   })
 
-  const month = 4 // May
   const dayEvent = events?.find((e) => {
     const eventDate = new Date(e.event_date)
-    return selectedDay !== null && eventDate.getDate() === selectedDay && eventDate.getMonth() === month
+    return selectedDay !== null && eventDate.getDate() === selectedDay && eventDate.getMonth() === month && eventDate.getFullYear() === year
   })
 
   const subsystemId = dayEvent?.subsystem_id
