@@ -75,6 +75,7 @@ export type Spare = {
   months_remaining: number | null
   status: string
   alert_level: string | null
+  replacement_action: string | null
   storage_location: string | null
 }
 

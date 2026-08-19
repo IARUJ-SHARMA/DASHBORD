@@ -9,6 +9,14 @@ function statusClass(status: string) {
   return 'status-neutral'
 }
 
+function alertClass(alertLevel: string) {
+  const a = alertLevel.toLowerCase()
+  if (a.includes('expired')) return 'status-expired'
+  if (a.includes('warning')) return 'status-warning'
+  if (a.includes('ok')) return 'status-ok'
+  return 'status-neutral'
+}
+
 function InventoryPanel() {
   const [tab, setTab] = useState<'consumables' | 'spares'>('consumables')
 
@@ -57,16 +65,21 @@ function InventoryPanel() {
         {tab === 'spares' && loadingSpares && <p className="loading-text">Loading...</p>}
         {tab === 'spares' &&
           spares?.map((item) => (
-            <div key={item.spare_id} className="inventory-row">
-              <span className="inventory-name">
-                {item.spare_item_name}
-                {item.months_remaining !== null && (
-                  <span className="inventory-sub"> ({item.months_remaining}mo left)</span>
-                )}
-              </span>
-              <span className={`inventory-status ${statusClass(item.status)}`}>
-                {item.status}
-              </span>
+            <div key={item.spare_id} className="spare-card">
+              <div className="inventory-row">
+                <span className="inventory-name">
+                  {item.spare_item_name}
+                  {item.months_remaining !== null && (
+                    <span className="inventory-sub"> ({item.months_remaining}mo left)</span>
+                  )}
+                </span>
+                <span className={`inventory-status ${alertClass(item.alert_level ?? 'OK')}`}>
+                  {item.alert_level}
+                </span>
+              </div>
+              {item.replacement_action && (item.alert_level?.toLowerCase().includes('warning') || item.alert_level?.toLowerCase().includes('expired')) && (
+                <div className="spare-action">{item.replacement_action}</div>
+              )}
             </div>
           ))}
       </div>

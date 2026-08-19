@@ -156,6 +156,7 @@ body {
   font-size: 12px;
   color: #94a3b8;
 }
+
 .stat-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -187,6 +188,7 @@ body {
   font-size: 13px;
   margin-bottom: 20px;
 }
+
 .main-layout {
   display: flex;
   gap: 20px;
@@ -255,6 +257,7 @@ body {
   color: #94a3b8;
   font-size: 13px;
 }
+
 .inventory-tabs {
   display: flex;
   gap: 8px;
@@ -282,6 +285,7 @@ body {
   color: #94a3b8;
   font-size: 11px;
 }
+
 .task-card-header {
   display: flex;
   align-items: center;
@@ -301,4 +305,35 @@ body {
 
 .task-complete .task-title {
   text-decoration: line-through;
+}
+
+/* --- NEW SPARES STYLING ADDED BELOW --- */
+.spare-card {
+  border-bottom: 1px solid #334155;
+  padding: 6px 0;
+}
+
+.spare-card .inventory-row {
+  border-bottom: none;
+  padding: 0 0 4px 0;
+}
+
+.spare-action {
+  font-size: 11px;
+  color: #fbbf24;
+  background-color: #422006;
+  border-radius: 4px;
+  padding: 4px 6px;
+  margin-top: 2px;
+}
+
+.status-warning {
+  background-color: #78350f;
+  color: #fbbf24;
+}
+
+.status-expired {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+  font-weight: bold;
 }
