@@ -42,8 +42,24 @@ function StatCards({ selectedDay }: StatCardsProps) {
         <div className="stat-value">{summary?.subsystems_eligible}</div>
       </div>
       <div className="stat-card">
-        <div className="stat-label">Status</div>
+        <div className="stat-label">Status (Completed Today)</div>
         <div className="stat-value">{summary?.status_percentage}%</div>
+      </div>
+      <div className="stat-card stat-card-small">
+        <div className="stat-label">Low Stock Alerts</div>
+        <div className="stat-value">{summary?.low_stock_alerts}</div>
+      </div>
+      <div className="stat-card stat-card-small">
+        <div className="stat-label">Life Span Alerts</div>
+        <div className="stat-value">{summary?.life_span_alerts}</div>
+      </div>
+      <div className="stat-card stat-card-small">
+        <div className="stat-label">Active Subsystems</div>
+        <div className="stat-value">{summary?.total_active_subsystems}</div>
+      </div>
+      <div className="stat-card stat-card-small">
+        <div className="stat-label">PM Completion (MTD)</div>
+        <div className="stat-value">{summary?.pm_completion_rate_mtd}%</div>
       </div>
     </div>
   )

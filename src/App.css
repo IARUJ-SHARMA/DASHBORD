@@ -183,6 +183,11 @@ body {
   font-weight: bold;
 }
 
+/* --- ADDED STAT CARD SMALL RULE --- */
+.stat-card-small .stat-value {
+  font-size: 18px;
+}
+
 .stat-cards-empty {
   color: #94a3b8;
   font-size: 13px;

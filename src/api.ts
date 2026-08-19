@@ -43,6 +43,10 @@ export type Summary = {
   estimated_maintenance_hours: number
   subsystems_eligible: number
   status_percentage: number
+  low_stock_alerts: number
+  life_span_alerts: number
+  total_active_subsystems: number
+  pm_completion_rate_mtd: number
 }
 
 export async function fetchSummary(dateStr: string): Promise<Summary> {
