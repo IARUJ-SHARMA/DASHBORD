@@ -98,3 +98,35 @@ export async function updateTaskStatus(taskId: string, status: string): Promise<
   if (!res.ok) throw new Error('Failed to update task status')
   return res.json()
 }
+
+export type UploadResult = {
+  filename: string
+  uploaded_at: string
+  summary: Record<string, { inserted: number; updated: number }>
+}
+
+export type LastUpdate = {
+  filename: string | null
+  uploaded_at: string | null
+}
+
+export async function uploadExcel(file: File): Promise<UploadResult> {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const res = await fetch(`${BASE_URL}/api/admin/upload-excel`, {
+    method: 'POST',
+    body: formData,
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.detail || 'Upload failed')
+  }
+  return res.json()
+}
+
+export async function fetchLastUpdate(): Promise<LastUpdate> {
+  const res = await fetch(`${BASE_URL}/api/admin/last-update`)
+  if (!res.ok) throw new Error('Failed to fetch last update')
+  return res.json()
+}

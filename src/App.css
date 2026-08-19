@@ -371,3 +371,46 @@ body {
   min-width: 140px;
   text-align: center;
 }
+
+/* --- ADDED DATA UPLOAD STYLING --- */
+.data-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.data-upload-info {
+  color: #94a3b8;
+}
+
+.last-updated-value {
+  color: #cbd5e1;
+  margin-left: 6px;
+}
+
+.upload-button {
+  background-color: #38bdf8;
+  color: #0f172a;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.upload-button:hover {
+  background-color: #0ea5e9;
+}
+
+.upload-message {
+  font-size: 12px;
+}
+
+.upload-ok {
+  color: #4ade80;
+}
+
+.upload-error {
+  color: #f87171;
+}

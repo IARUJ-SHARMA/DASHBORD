@@ -3,12 +3,14 @@ import Calendar from './components/Calendar'
 import ChecklistPanel from './components/ChecklistPanel'
 import StatCards from './components/StatCards'
 import InventoryPanel from './components/InventoryPanel'
+import DataUpload from './components/DataUpload'
 import './App.css'
 
 function App() {
-  const [year, setYear] = useState(2026)
-  const [month, setMonth] = useState(4) // May (0-indexed)
-  const [selectedDay, setSelectedDay] = useState<number | null>(null)
+  const today = new Date()
+  const [year, setYear] = useState(today.getFullYear())
+  const [month, setMonth] = useState(today.getMonth())
+  const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate())
 
   function goToPreviousMonth() {
     setSelectedDay(null)
@@ -33,6 +35,7 @@ function App() {
   return (
     <div className="dashboard">
       <h1>Radar Preventive Maintenance Dashboard</h1>
+      <DataUpload />
       <StatCards year={year} month={month} selectedDay={selectedDay} />
       <div className="main-layout">
         <Calendar
