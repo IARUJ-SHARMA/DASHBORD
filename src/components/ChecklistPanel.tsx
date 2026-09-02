@@ -1,28 +1,15 @@
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
-import { fetchCalendarEvents, fetchChecklist, updateTaskStatus, type ChecklistTask } from '../api'
+import { fetchChecklist, updateTaskStatus, type ChecklistTask } from '../api'
 
 type ChecklistPanelProps = {
-  year: number
-  month: number
-  selectedDay: number | null
+  isOpen: boolean
+  subsystemId: string | null
+  subsystemLabel: string | null
   onClose: () => void
 }
 
-function ChecklistPanel({ year, month, selectedDay, onClose }: ChecklistPanelProps) {
-  const isOpen = selectedDay !== null
+function ChecklistPanel({ isOpen, subsystemId, subsystemLabel, onClose }: ChecklistPanelProps) {
   const queryClient = useQueryClient()
-
-  const { data: events } = useQuery({
-    queryKey: ['calendar-events'],
-    queryFn: fetchCalendarEvents,
-  })
-
-  const dayEvent = events?.find((e) => {
-    const eventDate = new Date(e.event_date)
-    return selectedDay !== null && eventDate.getDate() === selectedDay && eventDate.getMonth() === month && eventDate.getFullYear() === year
-  })
-
-  const subsystemId = dayEvent?.subsystem_id
 
   const { data: tasks, isLoading } = useQuery({
     queryKey: ['checklist', subsystemId],
@@ -49,13 +36,13 @@ function ChecklistPanel({ year, month, selectedDay, onClose }: ChecklistPanelPro
     <div className={`panel-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}>
       <div className="panel" onClick={(e) => e.stopPropagation()}>
         <div className="panel-header">
-          <h2>{dayEvent ? dayEvent.calendar_label : 'No maintenance scheduled'}</h2>
+          <h2>{subsystemLabel || 'No maintenance scheduled'}</h2>
           <button className="panel-close" onClick={onClose}>×</button>
         </div>
 
         {isLoading && <p className="panel-empty">Loading tasks...</p>}
-        {!dayEvent && <p className="panel-empty">No checklist tasks for this date.</p>}
-        {dayEvent && !isLoading && tasks?.length === 0 && (
+        {!subsystemId && <p className="panel-empty">No checklist tasks for this date.</p>}
+        {subsystemId && !isLoading && tasks?.length === 0 && (
           <p className="panel-empty">No checklist tasks found for this subsystem.</p>
         )}
 

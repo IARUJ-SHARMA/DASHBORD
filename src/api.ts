@@ -55,6 +55,19 @@ export async function fetchSummary(dateStr: string): Promise<Summary> {
   return res.json()
 }
 
+export type Eligibility = {
+  subsystem_id: string
+  subsystem_full_name: string
+  pm_frequency: string
+  est_duration_hrs: number
+}
+
+export async function fetchEligibility(dateStr: string): Promise<Eligibility[]> {
+  const res = await fetch(`${BASE_URL}/api/eligibility/${dateStr}`)
+  if (!res.ok) throw new Error('Failed to fetch eligibility')
+  return res.json()
+}
+
 export type Consumable = {
   item_id: string
   consumable_item_name: string
@@ -97,6 +110,35 @@ export async function updateTaskStatus(taskId: string, status: string): Promise<
   })
   if (!res.ok) throw new Error('Failed to update task status')
   return res.json()
+}
+
+export type RescheduleResult = {
+  log_id: string
+  original_date: string
+  new_date: string
+  status: string
+}
+
+export async function rescheduleTask(
+  subsystemId: string,
+  originalDate: string,
+  newDate: string,
+  reason: string
+): Promise<RescheduleResult> {
+  const res = await fetch(`${BASE_URL}/api/reschedule`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subsystem_id: subsystemId, original_date: originalDate, new_date: newDate, reason }),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.detail || 'Reschedule failed')
+  }
+  return res.json()
+}
+
+export function getExportPdfUrl(dateStr: string): string {
+  return `${BASE_URL}/api/export/${dateStr}`
 }
 
 export type UploadResult = {

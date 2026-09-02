@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchSummary } from '../api'
+import StatusGauge from './StatusGauge'
 
 type StatCardsProps = {
   year: number
@@ -42,7 +43,7 @@ function StatCards({ year, month, selectedDay }: StatCardsProps) {
       </div>
       <div className="stat-card">
         <div className="stat-label">Status (Completed Today)</div>
-        <div className="stat-value">{summary?.status_percentage}%</div>
+        <StatusGauge percentage={summary?.status_percentage ?? 0} />
       </div>
       <div className="stat-card stat-card-small">
         <div className="stat-label">Low Stock Alerts</div>
