@@ -2,13 +2,11 @@ import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { fetchChecklist, updateTaskStatus, type ChecklistTask } from '../api'
 
 type ChecklistPanelProps = {
-  isOpen: boolean
   subsystemId: string | null
   subsystemLabel: string | null
-  onClose: () => void
 }
 
-function ChecklistPanel({ isOpen, subsystemId, subsystemLabel, onClose }: ChecklistPanelProps) {
+function ChecklistPanel({ subsystemId, subsystemLabel }: ChecklistPanelProps) {
   const queryClient = useQueryClient()
 
   const { data: tasks, isLoading } = useQuery({
@@ -33,41 +31,38 @@ function ChecklistPanel({ isOpen, subsystemId, subsystemLabel, onClose }: Checkl
   }
 
   return (
-    <div className={`panel-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}>
-      <div className="panel" onClick={(e) => e.stopPropagation()}>
-        <div className="panel-header">
-          <h2>{subsystemLabel || 'No maintenance scheduled'}</h2>
-          <button className="panel-close" onClick={onClose}>×</button>
-        </div>
-
-        {isLoading && <p className="panel-empty">Loading tasks...</p>}
-        {!subsystemId && <p className="panel-empty">No checklist tasks for this date.</p>}
-        {subsystemId && !isLoading && tasks?.length === 0 && (
-          <p className="panel-empty">No checklist tasks found for this subsystem.</p>
-        )}
-
-        {tasks?.map((task) => (
-          <div
-            key={task.task_id}
-            className={`task-card ${task.completion_status === 'COMPLETE' ? 'task-complete' : ''}`}
-          >
-            <div className="task-card-header">
-              <input
-                type="checkbox"
-                checked={task.completion_status === 'COMPLETE'}
-                onChange={() => toggleComplete(task)}
-              />
-              <div className="task-title">{task.task_title}</div>
-            </div>
-            <div className="task-description">{task.task_description}</div>
-            <div className="task-meta">
-              <span>{task.approx_time_min} min</span>
-              <span>{task.special_tools}</span>
-              <span>{task.ppe_requirements}</span>
-            </div>
-          </div>
-        ))}
+    <div className="checklist-panel">
+      <div className="panel-header">
+        <h2>{subsystemLabel || 'No maintenance scheduled'}</h2>
       </div>
+
+      {isLoading && <p className="panel-empty">Loading tasks...</p>}
+      {!subsystemId && <p className="panel-empty">Select a date and subsystem to view its checklist.</p>}
+      {subsystemId && !isLoading && tasks?.length === 0 && (
+        <p className="panel-empty">No checklist tasks found for this subsystem.</p>
+      )}
+
+      {tasks?.map((task) => (
+        <div
+          key={task.task_id}
+          className={`task-card ${task.completion_status === 'COMPLETE' ? 'task-complete' : ''}`}
+        >
+          <div className="task-card-header">
+            <input
+              type="checkbox"
+              checked={task.completion_status === 'COMPLETE'}
+              onChange={() => toggleComplete(task)}
+            />
+            <div className="task-title">{task.task_title}</div>
+          </div>
+          <div className="task-description">{task.task_description}</div>
+          <div className="task-meta">
+            <span>{task.approx_time_min} min</span>
+            <span>{task.special_tools}</span>
+            <span>{task.ppe_requirements}</span>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

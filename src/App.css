@@ -13,7 +13,7 @@ body {
 }
 
 .dashboard {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -243,27 +243,40 @@ body {
 }
 
 .event-tag {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
-  padding: 3px 6px;
+  padding: 3px 5px;
   border-radius: 4px;
   color: white;
   margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ===== Layout ===== */
-.main-layout {
+/* ===== 3-Column Layout ===== */
+.three-column-layout {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   align-items: flex-start;
 }
 
-.side-column {
+.col-calendar {
+  flex: 2;
+  min-width: 0;
+}
+
+.col-eligibility {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 300px;
+  width: 320px;
   flex-shrink: 0;
+}
+
+.col-checklist {
+  flex: 1;
+  min-width: 340px;
 }
 
 /* ===== Subsystem Eligibility Panel ===== */
@@ -273,6 +286,7 @@ body {
   border-radius: 10px;
   padding: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  min-height: 300px;
 }
 
 .eligibility-panel h3 {
@@ -444,72 +458,29 @@ body {
   font-size: 13px;
 }
 
-/* ===== Sliding checklist panel ===== */
-.panel-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(15, 23, 42, 0);
-  pointer-events: none;
-  transition: background 0.2s ease;
-  display: flex;
-  justify-content: flex-end;
-  z-index: 50;
-}
-
-.panel-overlay.open {
-  background: rgba(15, 23, 42, 0.35);
-  pointer-events: auto;
-}
-
-.panel {
-  width: 400px;
-  height: 100%;
+/* ===== Static Checklist Panel Column ===== */
+.checklist-panel {
   background-color: #ffffff;
-  padding: 24px;
-  box-sizing: border-box;
-  transform: translateX(100%);
-  transition: transform 0.25s ease;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  min-height: 300px;
+  max-height: 700px;
   overflow-y: auto;
-  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.08);
 }
 
-.panel-overlay.open .panel {
-  transform: translateX(0);
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.checklist-panel .panel-header {
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.panel-header h2 {
-  font-size: 17px;
+.checklist-panel .panel-header h2 {
+  font-size: 16px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
-}
-
-.panel-close {
-  background: #f1f5f9;
-  border: none;
-  color: #64748b;
-  font-size: 18px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.panel-close:hover {
-  background: #e2e8f0;
 }
 
 .panel-empty {
@@ -654,7 +625,7 @@ body {
     padding: 0;
   }
 
-  .stat-card, .day-cell, .inventory-panel, .eligibility-panel {
+  .stat-card, .day-cell, .inventory-panel, .eligibility-panel, .checklist-panel {
     border: 1px solid #cbd5e1 !important;
     box-shadow: none !important;
     break-inside: avoid;

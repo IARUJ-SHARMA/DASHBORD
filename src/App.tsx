@@ -5,7 +5,7 @@ import StatCards from './components/StatCards'
 import InventoryPanel from './components/InventoryPanel'
 import DataUpload from './components/DataUpload'
 import SubsystemEligibility from './components/SubsystemEligibility'
-import { rescheduleTask, getExportPdfUrl } from './api'
+import { rescheduleTask } from './api'
 import './App.css'
 
 function App() {
@@ -39,11 +39,8 @@ function App() {
   }
 
   function handleExportPDF() {
-    if (!dateStr) {
-      alert('Please select a date first.')
-      return
-    }
-    window.open(getExportPdfUrl(dateStr), '_blank')
+    if (!dateStr) return
+    window.open(`http://127.0.0.1:8000/api/export/${dateStr}`, '_blank')
   }
 
   async function handleReschedule() {
@@ -87,16 +84,19 @@ function App() {
         <span className="legend-item"><span className="legend-swatch" style={{ backgroundColor: '#92400E' }} />Annual</span>
       </div>
 
-      <div className="main-layout">
-        <Calendar
-          year={year}
-          month={month}
-          selectedDay={selectedDay}
-          setSelectedDay={handleDaySelect}
-          onPreviousMonth={goToPreviousMonth}
-          onNextMonth={goToNextMonth}
-        />
-        <div className="side-column">
+      <div className="three-column-layout">
+        <div className="col-calendar">
+          <Calendar
+            year={year}
+            month={month}
+            selectedDay={selectedDay}
+            setSelectedDay={handleDaySelect}
+            onPreviousMonth={goToPreviousMonth}
+            onNextMonth={goToNextMonth}
+          />
+        </div>
+
+        <div className="col-eligibility">
           <SubsystemEligibility
             dateStr={dateStr}
             selectedSubsystemId={selectedSubsystemId}
@@ -107,14 +107,14 @@ function App() {
           />
           <InventoryPanel />
         </div>
-      </div>
 
-      <ChecklistPanel
-        isOpen={selectedDay !== null}
-        subsystemId={selectedSubsystemId}
-        subsystemLabel={selectedSubsystemLabel}
-        onClose={() => setSelectedDay(null)}
-      />
+        <div className="col-checklist">
+          <ChecklistPanel
+            subsystemId={selectedSubsystemId}
+            subsystemLabel={selectedSubsystemLabel}
+          />
+        </div>
+      </div>
     </div>
   )
 }
