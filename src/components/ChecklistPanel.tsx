@@ -6,12 +6,28 @@ type ChecklistPanelProps = {
   subsystemLabel: string | null
 }
 
+type GatekeepingData = {
+  has_warning: boolean
+  low_stock_items: string[]
+}
+
 function ChecklistPanel({ subsystemId, subsystemLabel }: ChecklistPanelProps) {
   const queryClient = useQueryClient()
 
   const { data: tasks, isLoading } = useQuery({
     queryKey: ['checklist', subsystemId],
     queryFn: () => fetchChecklist(subsystemId!),
+    enabled: !!subsystemId,
+  })
+
+  // Fetch inventory gatekeeping warning status for the selected subsystem
+  const { data: gatekeeping } = useQuery<GatekeepingData>({
+    queryKey: ['gatekeeping', subsystemId],
+    queryFn: async () => {
+      const res = await fetch(`http://127.0.0.1:8000/api/gatekeeping/${subsystemId}`)
+      if (!res.ok) throw new Error('Failed to fetch gatekeeping status')
+      return res.json()
+    },
     enabled: !!subsystemId,
   })
 
@@ -35,6 +51,18 @@ function ChecklistPanel({ subsystemId, subsystemLabel }: ChecklistPanelProps) {
       <div className="panel-header">
         <h2>{subsystemLabel || 'No maintenance scheduled'}</h2>
       </div>
+
+      {/* Inventory Warning Banner */}
+      {gatekeeping?.has_warning && (
+        <div style={{ backgroundColor: '#fff3cd', color: '#856404', padding: '10px 15px', borderRadius: '4px', marginBottom: '15px', border: '1px solid #ffeeba' }}>
+          <strong>⚠️ Inventory Warning:</strong> Low-stock consumables detected for this subsystem:
+          <ul style={{ margin: '5px 0 0 20px', padding: 0 }}>
+            {gatekeeping.low_stock_items.map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {isLoading && <p className="panel-empty">Loading tasks...</p>}
       {!subsystemId && <p className="panel-empty">Select a date and subsystem to view its checklist.</p>}
