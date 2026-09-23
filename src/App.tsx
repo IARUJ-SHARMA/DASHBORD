@@ -12,8 +12,10 @@ function App() {
   const today = new Date()
   const [year, setYear] = useState(today.getFullYear())
   const [month, setMonth] = useState(today.getMonth())
-  // Default to null so it starts in Monthly View, or today.getDate() if you prefer today
-  const [selectedDay, setSelectedDay] = useState<number | null>(null)
+  
+  // Initialize with today's date so refreshing the page automatically selects today (e.g. 23)
+  const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate())
+  
   const [selectedSubsystemId, setSelectedSubsystemId] = useState<string | null>(null)
   const [selectedSubsystemLabel, setSelectedSubsystemLabel] = useState<string | null>(null)
   const [rescheduleOpen, setRescheduleOpen] = useState(false)
@@ -36,7 +38,7 @@ function App() {
     } else {
       setMonth(month - 1)
     }
-    // Setting to null ensures month navigation defaults to the cumulative monthly view
+    // Setting to null on month change returns to default monthly view scope
     setSelectedDay(null)
     setSelectedSubsystemId(null)
     setSelectedSubsystemLabel(null)
@@ -49,7 +51,7 @@ function App() {
     } else {
       setMonth(month + 1)
     }
-    // Setting to null ensures month navigation defaults to the cumulative monthly view
+    // Setting to null on month change returns to default monthly view scope
     setSelectedDay(null)
     setSelectedSubsystemId(null)
     setSelectedSubsystemLabel(null)
