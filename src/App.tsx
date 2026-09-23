@@ -5,16 +5,19 @@ import StatCards from './components/StatCards'
 import InventoryPanel from './components/InventoryPanel'
 import DataUpload from './components/DataUpload'
 import SubsystemEligibility from './components/SubsystemEligibility'
-import { rescheduleTask } from './api'
+import RescheduleModal from './components/RescheduleModal'
 import './App.css'
 
 function App() {
   const today = new Date()
   const [year, setYear] = useState(today.getFullYear())
   const [month, setMonth] = useState(today.getMonth())
-  const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate())
+  // Default to null so it starts in Monthly View, or today.getDate() if you prefer today
+  const [selectedDay, setSelectedDay] = useState<number | null>(null)
   const [selectedSubsystemId, setSelectedSubsystemId] = useState<string | null>(null)
   const [selectedSubsystemLabel, setSelectedSubsystemLabel] = useState<string | null>(null)
+  const [rescheduleOpen, setRescheduleOpen] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   const dateStr = selectedDay
     ? `${year}-${String(month + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`
@@ -27,42 +30,44 @@ function App() {
   }
 
   function goToPreviousMonth() {
+    if (month === 0) {
+      setMonth(11)
+      setYear(year - 1)
+    } else {
+      setMonth(month - 1)
+    }
+    // Setting to null ensures month navigation defaults to the cumulative monthly view
     setSelectedDay(null)
     setSelectedSubsystemId(null)
-    if (month === 0) { setMonth(11); setYear(year - 1) } else { setMonth(month - 1) }
+    setSelectedSubsystemLabel(null)
   }
 
   function goToNextMonth() {
+    if (month === 11) {
+      setMonth(0)
+      setYear(year + 1)
+    } else {
+      setMonth(month + 1)
+    }
+    // Setting to null ensures month navigation defaults to the cumulative monthly view
     setSelectedDay(null)
     setSelectedSubsystemId(null)
-    if (month === 11) { setMonth(0); setYear(year + 1) } else { setMonth(month + 1) }
+    setSelectedSubsystemLabel(null)
   }
 
   function handleExportPDF() {
-    if (!dateStr) return
-    window.open(`http://127.0.0.1:8000/api/export/${dateStr}`, '_blank')
+    const exportDateStr = dateStr ?? `${year}-${String(month + 1).padStart(2, '0')}-01`
+    window.open(`http://127.0.0.1:8000/api/export/${exportDateStr}`, '_blank')
   }
 
-  async function handleReschedule() {
-    if (!selectedSubsystemId || !dateStr) {
-      alert('Select a date and subsystem first.')
-      return
-    }
-    const newDate = prompt('Enter new date (YYYY-MM-DD):')
-    if (!newDate) return
-    const reason = prompt('Reason for rescheduling:') || 'No reason provided'
-
-    try {
-      const result = await rescheduleTask(selectedSubsystemId, dateStr, newDate, reason)
-      alert(`Rescheduled: ${result.log_id} — ${result.original_date} → ${result.new_date}`)
-      window.location.reload()
-    } catch (err) {
-      alert(err instanceof Error ? err.message : 'Reschedule failed')
-    }
+  function handleRescheduleSuccess() {
+    setRefreshKey((k) => k + 1)
+    setSelectedSubsystemId(null)
+    setSelectedSubsystemLabel(null)
   }
 
   return (
-    <div className="dashboard">
+    <div className="dashboard" key={refreshKey}>
       <div className="header-bar">
         <div className="header-title">
           <div className="header-icon">📡</div>
@@ -70,7 +75,7 @@ function App() {
         </div>
         <div className="header-actions">
           <button className="header-button" onClick={handleExportPDF}>Export Plan (PDF)</button>
-          <button className="header-button primary" onClick={handleReschedule}>Reschedule PM</button>
+          <button className="header-button primary" onClick={() => setRescheduleOpen(true)}>Reschedule PM</button>
         </div>
       </div>
 
@@ -115,6 +120,14 @@ function App() {
           />
         </div>
       </div>
+
+      <RescheduleModal
+        isOpen={rescheduleOpen}
+        onClose={() => setRescheduleOpen(false)}
+        dateStr={dateStr}
+        preselectedSubsystemId={selectedSubsystemId}
+        onSuccess={handleRescheduleSuccess}
+      />
     </div>
   )
 }

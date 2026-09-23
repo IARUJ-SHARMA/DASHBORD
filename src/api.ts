@@ -55,6 +55,20 @@ export async function fetchSummary(dateStr: string): Promise<Summary> {
   return res.json()
 }
 
+export type MonthlySummary = {
+  pending_tasks: number
+  total_tasks: number
+  estimated_maintenance_hours: number
+  subsystems_eligible: number
+  status_percentage: number
+}
+
+export async function fetchMonthlySummary(year: number, month: number): Promise<MonthlySummary> {
+  const res = await fetch(`${BASE_URL}/api/summary/month/${year}/${month}`)
+  if (!res.ok) throw new Error('Failed to fetch monthly summary')
+  return res.json()
+}
+
 export type Eligibility = {
   subsystem_id: string
   subsystem_full_name: string
