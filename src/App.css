@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* Base layout resets */
 html {
   background-color: #f1f5f9;
   margin: 0;
@@ -26,7 +27,7 @@ body {
   box-sizing: border-box;
 }
 
-/* ===== Header bar ===== */
+/* Header bar styling */
 .header-bar {
   display: flex;
   align-items: center;
@@ -89,6 +90,13 @@ body {
   background-color: #ffffff;
 }
 
+/* Greys out the export button cleanly when locked in monthly view */
+.header-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
 .header-button.primary {
   background-color: #0369a1;
   color: #ffffff;
@@ -98,7 +106,7 @@ body {
   background-color: #075985;
 }
 
-/* ===== Stat cards & View Toggle ===== */
+/* Stat cards and daily/monthly view toggle */
 .view-toggle {
   display: flex;
   gap: 8px;
@@ -162,7 +170,7 @@ body {
   margin-bottom: 20px;
 }
 
-/* ===== Frequency legend ===== */
+/* Maintenance frequency color legend */
 .frequency-legend {
   display: flex;
   align-items: center;
@@ -185,7 +193,7 @@ body {
   display: inline-block;
 }
 
-/* ===== Calendar ===== */
+/* Calendar grid layout */
 .calendar-nav {
   display: flex;
   align-items: center;
@@ -285,7 +293,7 @@ body {
   text-overflow: ellipsis;
 }
 
-/* ===== 3-Column Layout ===== */
+/* Main 3-column dashboard body */
 .three-column-layout {
   display: flex;
   gap: 16px;
@@ -311,7 +319,7 @@ body {
   min-width: 300px;
 }
 
-/* ===== Subsystem Eligibility Panel ===== */
+/* Subsystem Eligibility panel */
 .eligibility-panel {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -364,7 +372,7 @@ body {
   background-color: #f1f5f9;
 }
 
-/* ===== Inventory panel ===== */
+/* Inventory and spares monitor */
 .inventory-panel {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -508,7 +516,7 @@ body {
   font-size: 13px;
 }
 
-/* ===== Static Checklist Panel Column ===== */
+/* Checklist panel column */
 .checklist-panel {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -608,7 +616,7 @@ body {
   color: #64748b;
 }
 
-/* ===== Data upload ===== */
+/* Excel Data upload bar */
 .data-upload {
   display: flex;
   align-items: center;
@@ -654,7 +662,7 @@ body {
   color: #b91c1c;
 }
 
-/* ===== Status Gauge ===== */
+/* Status gauge indicator */
 .status-gauge {
   display: flex;
   flex-direction: column;
@@ -669,7 +677,7 @@ body {
   margin-top: -18px;
 }
 
-/* ===== Reschedule Modal Styles ===== */
+/* Reschedule popup modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -804,7 +812,7 @@ body {
   cursor: not-allowed;
 }
 
-/* ===== Print / PDF Export Styles ===== */
+/* Print and PDF export layout overrides */
 @media print {
   body {
     background-color: #ffffff;

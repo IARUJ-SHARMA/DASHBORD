@@ -20,7 +20,6 @@ function ChecklistPanel({ subsystemId, subsystemLabel }: ChecklistPanelProps) {
     enabled: !!subsystemId,
   })
 
-  // Fetch inventory gatekeeping warning status for the selected subsystem
   const { data: gatekeeping } = useQuery<GatekeepingData>({
     queryKey: ['gatekeeping', subsystemId],
     queryFn: async () => {
@@ -35,9 +34,13 @@ function ChecklistPanel({ subsystemId, subsystemLabel }: ChecklistPanelProps) {
     mutationFn: ({ taskId, status }: { taskId: string; status: string }) =>
       updateTaskStatus(taskId, status),
     onSuccess: (updatedTask) => {
+      // Instantly update local checklist state in cache
       queryClient.setQueryData<ChecklistTask[]>(['checklist', subsystemId], (old) =>
         old?.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t))
       )
+      // Refresh summary gauges and monthly progress stats immediately
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
+      queryClient.invalidateQueries({ queryKey: ['monthly-summary'] })
     },
   })
 
@@ -52,7 +55,6 @@ function ChecklistPanel({ subsystemId, subsystemLabel }: ChecklistPanelProps) {
         <h2>{subsystemLabel || 'No maintenance scheduled'}</h2>
       </div>
 
-      {/* Inventory Warning Banner */}
       {gatekeeping?.has_warning && (
         <div style={{ backgroundColor: '#fff3cd', color: '#856404', padding: '10px 15px', borderRadius: '4px', marginBottom: '15px', border: '1px solid #ffeeba' }}>
           <strong>⚠️ Inventory Warning:</strong> Low-stock consumables detected for this subsystem:

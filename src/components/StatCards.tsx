@@ -7,10 +7,16 @@ type StatCardsProps = {
   year: number
   month: number
   selectedDay: number | null
+  onViewModeChange?: (mode: 'daily' | 'monthly') => void
 }
 
-function StatCards({ year, month, selectedDay }: StatCardsProps) {
+function StatCards({ year, month, selectedDay, onViewModeChange }: StatCardsProps) {
   const [viewMode, setViewMode] = useState<'daily' | 'monthly'>('daily')
+
+  function handleToggle(mode: 'daily' | 'monthly') {
+    setViewMode(mode)
+    onViewModeChange?.(mode)
+  }
 
   const dateStr = selectedDay
     ? `${year}-${String(month + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`
@@ -32,13 +38,13 @@ function StatCards({ year, month, selectedDay }: StatCardsProps) {
     <div className="view-toggle">
       <button
         className={viewMode === 'daily' ? 'toggle-active' : ''}
-        onClick={() => setViewMode('daily')}
+        onClick={() => handleToggle('daily')}
       >
         Daily
       </button>
       <button
         className={viewMode === 'monthly' ? 'toggle-active' : ''}
-        onClick={() => setViewMode('monthly')}
+        onClick={() => handleToggle('monthly')}
       >
         Monthly
       </button>

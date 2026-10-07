@@ -27,11 +27,18 @@ function DataUpload() {
       setStatus('success')
       setMessage(`${totalInserted} rows added, ${totalUpdated} rows updated.`)
 
-      // Refresh every piece of data that could have changed
-      queryClient.invalidateQueries({ queryKey: ['calendar-events'] })
-      queryClient.invalidateQueries({ queryKey: ['consumables'] })
-      queryClient.invalidateQueries({ queryKey: ['spares'] })
-      queryClient.invalidateQueries({ queryKey: ['last-update'] })
+      // Immediately set local time cache so it matches your exact computer clock
+      queryClient.setQueryData(['last-update'], {
+        filename: file.name,
+        uploaded_at: new Date().toISOString(),
+      })
+
+      // Refresh every piece of data and summary metrics that could have changed
+      await queryClient.invalidateQueries({ queryKey: ['calendar-events'] })
+      await queryClient.invalidateQueries({ queryKey: ['consumables'] })
+      await queryClient.invalidateQueries({ queryKey: ['spares'] })
+      await queryClient.invalidateQueries({ queryKey: ['summary'] })
+      await queryClient.invalidateQueries({ queryKey: ['monthly-summary'] })
     } catch (err) {
       setStatus('error')
       setMessage(err instanceof Error ? err.message : 'Upload failed')

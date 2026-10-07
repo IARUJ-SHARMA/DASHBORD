@@ -13,13 +13,14 @@ function App() {
   const [year, setYear] = useState(today.getFullYear())
   const [month, setMonth] = useState(today.getMonth())
   
-  // Initialize with today's date so refreshing the page automatically selects today (e.g. 23)
   const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate())
   
   const [selectedSubsystemId, setSelectedSubsystemId] = useState<string | null>(null)
   const [selectedSubsystemLabel, setSelectedSubsystemLabel] = useState<string | null>(null)
   const [rescheduleOpen, setRescheduleOpen] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
+
+  const [isMonthlyView, setIsMonthlyView] = useState(false)
 
   const dateStr = selectedDay
     ? `${year}-${String(month + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`
@@ -38,7 +39,6 @@ function App() {
     } else {
       setMonth(month - 1)
     }
-    // Setting to null on month change returns to default monthly view scope
     setSelectedDay(null)
     setSelectedSubsystemId(null)
     setSelectedSubsystemLabel(null)
@@ -51,15 +51,18 @@ function App() {
     } else {
       setMonth(month + 1)
     }
-    // Setting to null on month change returns to default monthly view scope
     setSelectedDay(null)
     setSelectedSubsystemId(null)
     setSelectedSubsystemLabel(null)
   }
 
   function handleExportPDF() {
-    const exportDateStr = dateStr ?? `${year}-${String(month + 1).padStart(2, '0')}-01`
-    window.open(`http://127.0.0.1:8000/api/export/${exportDateStr}`, '_blank')
+    if (isMonthlyView) {
+      window.open(`http://127.0.0.1:8000/api/export/month/${year}/${month + 1}`, '_blank')
+    } else {
+      const exportDateStr = dateStr ?? `${year}-${String(month + 1).padStart(2, '0')}-01`
+      window.open(`http://127.0.0.1:8000/api/export/${exportDateStr}`, '_blank')
+    }
   }
 
   function handleRescheduleSuccess() {
@@ -76,13 +79,23 @@ function App() {
           <h1>Radar Preventive Maintenance Dashboard</h1>
         </div>
         <div className="header-actions">
-          <button className="header-button" onClick={handleExportPDF}>Export Plan (PDF)</button>
+          <button 
+            className="header-button" 
+            onClick={handleExportPDF}
+          >
+            Export Plan (PDF)
+          </button>
           <button className="header-button primary" onClick={() => setRescheduleOpen(true)}>Reschedule PM</button>
         </div>
       </div>
 
       <DataUpload />
-      <StatCards year={year} month={month} selectedDay={selectedDay} />
+      <StatCards 
+        year={year} 
+        month={month} 
+        selectedDay={selectedDay} 
+        onViewModeChange={(mode) => setIsMonthlyView(mode === 'monthly')}
+      />
 
       <div className="frequency-legend">
         <span className="legend-item"><span className="legend-swatch" style={{ backgroundColor: '#1D4ED8' }} />Weekly</span>
